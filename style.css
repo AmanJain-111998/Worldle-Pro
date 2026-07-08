@@ -1384,8 +1384,8 @@ body.light-theme .crossword-keyboard-clue {
   width: 100%;
   overflow: auto;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   padding: 10px;
   min-height: 180px;
   max-height: 380px;
@@ -1398,6 +1398,7 @@ body.light-theme .crossword-keyboard-clue {
   grid-gap: 0px;
   background-color: transparent !important;
   border: none !important;
+  margin: auto;
 }
 
 .crossword-cell {
