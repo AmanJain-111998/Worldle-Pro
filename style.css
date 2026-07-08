@@ -1444,11 +1444,20 @@ body.dark-theme .crossword-cell {
 
 /* Cell Selection Colors */
 .crossword-cell.highlight-word {
-  background-color: rgba(6, 182, 212, 0.15); /* Muted cyan focus */
+  background-color: #cffafe !important; /* light cyan */
+}
+
+body.dark-theme .crossword-cell.highlight-word {
+  background-color: #bdecf6 !important; /* solid light pastel cyan for dark mode */
 }
 
 .crossword-cell.highlight-cell {
-  background-color: rgba(6, 182, 212, 0.35) !important;
+  background-color: #06b6d4 !important; /* vibrant cyan */
+  color: #ffffff !important;
+}
+
+.crossword-cell.highlight-cell .cell-number {
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 /* Check validations colors */

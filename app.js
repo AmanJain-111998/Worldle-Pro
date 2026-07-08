@@ -204,9 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderQWERTYKeyboard();
   showView('dashboard');
   
-  // Previous level handlers
-  const handlePrevLevel = (e) => {
-    e.preventDefault();
+  // Previous level button click
+  document.getElementById('btn-level-prev').addEventListener('click', (e) => {
     e.stopPropagation();
     if (GameHubState.gameMode !== 'practice') return;
     const game = GameHubState.activeGame;
@@ -220,11 +219,10 @@ document.addEventListener('DOMContentLoaded', () => {
     saveStats();
     startActiveGame();
     AudioPlayer.playClick();
-  };
+  });
 
-  // Next level handlers
-  const handleNextLevel = (e) => {
-    e.preventDefault();
+  // Next level button click
+  document.getElementById('btn-level-next').addEventListener('click', (e) => {
     e.stopPropagation();
     if (GameHubState.gameMode !== 'practice') return;
     const game = GameHubState.activeGame;
@@ -238,12 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     saveStats();
     startActiveGame();
     AudioPlayer.playClick();
-  };
-
-  document.getElementById('btn-level-prev').addEventListener('click', handlePrevLevel);
-  document.getElementById('btn-level-prev').addEventListener('touchstart', handlePrevLevel, { passive: false });
-  document.getElementById('btn-level-next').addEventListener('click', handleNextLevel);
-  document.getElementById('btn-level-next').addEventListener('touchstart', handleNextLevel, { passive: false });
+  });
 
   // Click level badge label to jump directly to any level (1-500)
   document.getElementById('level-indicator-label').addEventListener('click', () => {
