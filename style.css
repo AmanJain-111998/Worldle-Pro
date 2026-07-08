@@ -1462,13 +1462,23 @@ body.dark-theme .crossword-cell.highlight-word {
 
 /* Check validations colors */
 .crossword-cell.checked-correct {
-  color: var(--color-correct);
-  background-color: var(--color-correct-glow);
+  color: #15803d !important;
+  background-color: #dcfce7 !important; /* solid pastel green */
+}
+
+body.dark-theme .crossword-cell.checked-correct {
+  color: #166534 !important;
+  background-color: #bbf7d0 !important; /* solid bright green for dark mode */
 }
 
 .crossword-cell.checked-wrong {
-  color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.15);
+  color: #b91c1c !important;
+  background-color: #fee2e2 !important; /* solid pastel red */
+}
+
+body.dark-theme .crossword-cell.checked-wrong {
+  color: #991b1b !important;
+  background-color: #fca5a5 !important; /* solid light red for dark mode */
 }
 
 .crossword-actions {
