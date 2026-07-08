@@ -1442,7 +1442,7 @@ const CrosswordEngine = {
           if (isCorrectWord) {
             cell.classList.add('checked-correct');
           } else if (this.isChecked && textVal) {
-            if (textVal === this.solution[r][c]) {
+            if (textVal.toUpperCase() === this.solution[r][c].toUpperCase()) {
               cell.classList.add('checked-correct');
             } else {
               cell.classList.add('checked-wrong');
@@ -1510,7 +1510,7 @@ const CrosswordEngine = {
       for (let i = 0; i < len; i++) {
         const wr = word.d === 'D' ? word.r + i : word.r;
         const wc = word.d === 'D' ? word.c : word.c + i;
-        if (!this.playerGrid[wr] || this.playerGrid[wr][wc] === undefined || this.playerGrid[wr][wc].trim() !== word.w[i]) {
+        if (!this.playerGrid[wr] || this.playerGrid[wr][wc] === undefined || this.playerGrid[wr][wc].trim().toUpperCase() !== word.w[i].toUpperCase()) {
           return false;
         }
       }
@@ -1670,7 +1670,7 @@ const CrosswordEngine = {
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size; c++) {
         if (this.solution[r][c] === '.') continue;
-        if (this.playerGrid[r][c].trim() !== this.solution[r][c]) {
+        if (this.playerGrid[r][c].trim().toUpperCase() !== this.solution[r][c].toUpperCase()) {
           allCorrect = false;
           break;
         }
@@ -1692,7 +1692,7 @@ const CrosswordEngine = {
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size; c++) {
         if (this.solution[r][c] === '.') continue;
-        if (this.playerGrid[r][c].trim() !== this.solution[r][c]) {
+        if (this.playerGrid[r][c].trim().toUpperCase() !== this.solution[r][c].toUpperCase()) {
           allCorrect = false;
           break;
         }
