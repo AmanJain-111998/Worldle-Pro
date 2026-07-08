@@ -1402,25 +1402,34 @@ body.light-theme .crossword-viewport {
 }
 
 .crossword-cell {
-  background-color: var(--bg-main);
+  background-color: #ffffff;
   aspect-ratio: 1;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
   font-family: var(--font-logo);
-  color: var(--text-main);
+  color: #0f172a;
   cursor: pointer;
   user-select: none;
   transition: background-color var(--transition-fast);
 }
 
+body.dark-theme .crossword-cell {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
 /* Blank block cell */
 .crossword-cell.black-cell {
-  background-color: var(--border-color) !important;
+  background-color: #090d16 !important;
   cursor: default;
+}
+
+body.light-theme .crossword-cell.black-cell {
+  background-color: #1e293b !important;
 }
 
 /* Numbers in cell corners */
@@ -1430,7 +1439,7 @@ body.light-theme .crossword-viewport {
   left: 2px;
   font-size: 8px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: #475569;
 }
 
 /* Cell Selection Colors */

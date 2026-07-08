@@ -1402,7 +1402,7 @@ const CrosswordEngine = {
     if (word) {
       const startNum = this.gridnums[word.r][word.c];
       const dirText = word.d === 'A' ? 'Across' : 'Down';
-      label.innerHTML = `<strong>${startNum} ${dirText}:</strong> ${word.c}`;
+      label.innerHTML = `<strong>${startNum} ${dirText}:</strong> ${word.cl}`;
     } else {
       label.innerHTML = 'Tap a white cell to see the clue';
     }
@@ -1421,7 +1421,7 @@ const CrosswordEngine = {
     sorted.forEach((entry) => {
       const num = this.gridnums[entry.r][entry.c];
       const li = document.createElement('li');
-      li.innerHTML = `<strong>${num}:</strong> ${entry.c}`;
+      li.innerHTML = `<strong>${num}:</strong> ${entry.cl}`;
       li.addEventListener('click', () => {
         closeModal(document.getElementById('modal-crossword-clues'));
         this.selectedCell = { r: entry.r, c: entry.c };
