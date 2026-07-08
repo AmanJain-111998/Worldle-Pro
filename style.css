@@ -1660,14 +1660,14 @@ body.light-theme .sudoku-cell.given {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  padding: 2px 6px;
+  padding: 2px 4px;
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.05);
   color: var(--text-main);
   border: var(--glass-border);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 body.light-theme .level-indicator-badge {
@@ -1679,8 +1679,8 @@ body.light-theme .level-indicator-badge {
   border: none;
   color: var(--text-main);
   cursor: pointer;
-  font-size: 10px;
-  padding: 4px 8px;
+  font-size: 14px; /* Larger arrow character for easy readability */
+  padding: 6px 12px; /* Large 44px equivalent hit area for mobile touch accuracy */
   border-radius: 12px;
   display: flex;
   align-items: center;

@@ -204,60 +204,47 @@ document.addEventListener('DOMContentLoaded', () => {
   renderQWERTYKeyboard();
   showView('dashboard');
   
-  // Previous level button click
-  document.getElementById('btn-level-prev').addEventListener('click', (e) => {
-    e.stopPropagation();
+  // Delegated Level Indicator Click Handler
+  document.getElementById('level-indicator').addEventListener('click', (e) => {
     if (GameHubState.gameMode !== 'practice') return;
     const game = GameHubState.activeGame;
     const diff = GameHubState.difficulty;
     if (!game) return;
+    
+    const prevBtn = e.target.closest('#btn-level-prev');
+    const nextBtn = e.target.closest('#btn-level-next');
+    const label = e.target.closest('#level-indicator-label');
     
     let statsObj = GameHubState.stats[game].practice[diff];
-    let lvlIdx = statsObj.levelIndex;
-    lvlIdx = (lvlIdx - 1 + 500) % 500;
-    statsObj.levelIndex = lvlIdx;
-    saveStats();
-    startActiveGame();
-    AudioPlayer.playClick();
-  });
-
-  // Next level button click
-  document.getElementById('btn-level-next').addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (GameHubState.gameMode !== 'practice') return;
-    const game = GameHubState.activeGame;
-    const diff = GameHubState.difficulty;
-    if (!game) return;
     
-    let statsObj = GameHubState.stats[game].practice[diff];
-    let lvlIdx = statsObj.levelIndex;
-    lvlIdx = (lvlIdx + 1) % 500;
-    statsObj.levelIndex = lvlIdx;
-    saveStats();
-    startActiveGame();
-    AudioPlayer.playClick();
-  });
-
-  // Click level badge label to jump directly to any level (1-500)
-  document.getElementById('level-indicator-label').addEventListener('click', () => {
-    if (GameHubState.gameMode !== 'practice') return;
-    const game = GameHubState.activeGame;
-    const diff = GameHubState.difficulty;
-    if (!game) return;
-    
-    const statsObj = GameHubState.stats[game].practice[diff];
-    const currentLvl = ((statsObj ? statsObj.levelIndex : 0) % 500) + 1;
-    const input = prompt(`Enter Level Number (1-500):`, currentLvl);
-    if (input === null) return;
-    
-    const lvlNum = parseInt(input, 10);
-    if (!isNaN(lvlNum) && lvlNum >= 1 && lvlNum <= 500) {
-      GameHubState.stats[game].practice[diff].levelIndex = lvlNum - 1;
+    if (prevBtn) {
+      let lvlIdx = statsObj.levelIndex;
+      lvlIdx = (lvlIdx - 1 + 500) % 500;
+      statsObj.levelIndex = lvlIdx;
       saveStats();
       startActiveGame();
-      showToast(`Loaded Level ${lvlNum}`);
-    } else {
-      showToast('Please enter a valid number from 1 to 500');
+      AudioPlayer.playClick();
+    } else if (nextBtn) {
+      let lvlIdx = statsObj.levelIndex;
+      lvlIdx = (lvlIdx + 1) % 500;
+      statsObj.levelIndex = lvlIdx;
+      saveStats();
+      startActiveGame();
+      AudioPlayer.playClick();
+    } else if (label) {
+      const currentLvl = ((statsObj ? statsObj.levelIndex : 0) % 500) + 1;
+      const input = prompt(`Enter Level Number (1-500):`, currentLvl);
+      if (input === null) return;
+      
+      const lvlNum = parseInt(input, 10);
+      if (!isNaN(lvlNum) && lvlNum >= 1 && lvlNum <= 500) {
+        GameHubState.stats[game].practice[diff].levelIndex = lvlNum - 1;
+        saveStats();
+        startActiveGame();
+        showToast(`Loaded Level ${lvlNum}`);
+      } else {
+        showToast('Please enter a valid number from 1 to 500');
+      }
     }
   });
 });
