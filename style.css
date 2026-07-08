@@ -1606,11 +1606,11 @@ body.light-theme .sudoku-cell.row-divider {
 
 /* Cell states colors */
 .sudoku-cell.given {
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: transparent;
 }
 
 body.light-theme .sudoku-cell.given {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: transparent;
 }
 
 /* Cell Highlights (similar to sudoku.com) */
@@ -1946,38 +1946,112 @@ body.light-theme .secondary-button:hover {
   align-items: center;
   justify-content: center;
   border-radius: 50% !important;
+/* Dialer keyboard grid spacing */
+.dialer-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 250px;
+  margin: 8px auto 0;
+}
+
+.dialer-keyboard .keyboard-row {
+  width: 100%;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+#keyboard-numeric .dialer-key {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border: none !important;
+  width: 58px;
+  height: 58px;
+  flex: none; /* Keep circular */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50% !important;
+  padding: 0;
+  cursor: pointer;
   transition: background-color 0.15s, transform 0.1s;
 }
 
-body.light-theme #keyboard-numeric .num-key {
-  color: #1e3a8a !important; /* Rich Indigo in light mode */
+body.light-theme #keyboard-numeric .dialer-key {
+  background-color: rgba(0, 0, 0, 0.06) !important;
 }
 
-#keyboard-numeric .num-key:active {
-  background-color: rgba(59, 130, 246, 0.15) !important;
-  transform: scale(0.9);
+.dialer-key .dialer-num {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text-main);
+  line-height: 1.1;
 }
 
-/* Adjust button height on max-height 650px */
+.dialer-key .dialer-letters {
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-top: -2px;
+}
+
+#keyboard-numeric .dialer-key:active {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  transform: scale(0.95);
+}
+
+body.light-theme #keyboard-numeric .dialer-key:active {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Adjust sizes on small height viewports */
 @media (max-height: 650px) {
+  .dialer-keyboard {
+    gap: 6px;
+    max-width: 210px;
+  }
+  .dialer-keyboard .keyboard-row {
+    gap: 12px;
+  }
+  #keyboard-numeric .dialer-key {
+    width: 48px;
+    height: 48px;
+  }
+  .dialer-key .dialer-num {
+    font-size: 20px;
+  }
+  .dialer-key .dialer-letters {
+    font-size: 7px;
+  }
   .key-action-btn {
     height: 40px;
     font-size: 10px !important;
   }
-  #keyboard-numeric .num-key {
-    height: 40px;
-    font-size: 22px !important;
-  }
 }
 
 @media (max-height: 570px) {
+  .dialer-keyboard {
+    gap: 4px;
+    max-width: 180px;
+  }
+  .dialer-keyboard .keyboard-row {
+    gap: 8px;
+  }
+  #keyboard-numeric .dialer-key {
+    width: 42px;
+    height: 42px;
+  }
+  .dialer-key .dialer-num {
+    font-size: 17px;
+  }
+  .dialer-key .dialer-letters {
+    font-size: 6px;
+  }
   .key-action-btn {
     height: 34px;
     font-size: 9px !important;
-  }
-  #keyboard-numeric .num-key {
-    height: 34px;
-    font-size: 18px !important;
   }
 }
 
