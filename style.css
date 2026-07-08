@@ -407,9 +407,16 @@ body.light-theme .game-keyboard-wrapper {
 }
 
 .key-btn.fully-absent {
-  background-color: var(--key-absent-bg) !important;
-  color: var(--key-absent-text) !important;
-  opacity: 0.3 !important;
+  background-color: rgba(15, 23, 42, 0.6) !important;
+  color: rgba(255, 255, 255, 0.2) !important;
+  text-decoration: line-through !important;
+  opacity: 0.15 !important;
+  pointer-events: none !important;
+}
+
+body.light-theme .key-btn.fully-absent {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  color: rgba(0, 0, 0, 0.15) !important;
 }
 
 /* ==========================================================================
