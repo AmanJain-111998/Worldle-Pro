@@ -1364,6 +1364,10 @@ const CrosswordEngine = {
         cell.dataset.r = r;
         cell.dataset.c = c;
         
+        // Fix aspect-ratio collapse in Safari by explicitly setting size
+        cell.style.width = `${cellSize}px`;
+        cell.style.height = `${cellSize}px`;
+        
         if (this.solution[r][c] === '.') {
           cell.classList.add('black-cell');
         } else {
