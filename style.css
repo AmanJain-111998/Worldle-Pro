@@ -1069,11 +1069,55 @@ body.light-theme .install-banner {
   color: var(--text-muted);
 }
 
+.dashboard-category {
+  margin-bottom: 28px;
+  width: 100%;
+}
+
+.category-title {
+  font-family: var(--font-logo);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.08);
+  letter-spacing: 0.5px;
+}
+
+body.light-theme .category-title {
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.category-icon {
+  width: 20px;
+  height: 20px;
+  color: #3b82f6; /* Premium Accent Blue */
+}
+
 .games-grid {
   display: flex;
   flex-direction: column;
   gap: 16px;
   width: 100%;
+}
+
+.game-card.coming-soon {
+  opacity: 0.65;
+  cursor: not-allowed !important;
+  border: 1.5px dashed rgba(255, 255, 255, 0.15);
+}
+
+body.light-theme .game-card.coming-soon {
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.boardbox-color {
+  background: linear-gradient(135deg, #a855f7, #7c3aed) !important;
+  color: white;
 }
 
 .game-card {

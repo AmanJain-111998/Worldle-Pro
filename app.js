@@ -529,6 +529,7 @@ function bindOrchestratorEvents() {
   // Main selector cards clicks
   document.querySelectorAll('.game-card').forEach(card => {
     card.addEventListener('click', () => {
+      if (card.classList.contains('coming-soon') || !card.dataset.game) return;
       AudioPlayer.playClick();
       showView(card.dataset.game);
     });

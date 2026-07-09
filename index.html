@@ -62,54 +62,90 @@
     <main id="view-dashboard" class="dashboard-container">
       <div class="dashboard-intro">
         <h2>Choose a Game</h2>
-        <p>Challenge your mind with 4 offline puzzles</p>
+        <p>Challenge your mind with offline puzzles</p>
       </div>
       
-      <div class="games-grid">
-        <!-- Wordle Card -->
-        <div class="game-card" data-game="wordle">
-          <div class="card-icon wordle-color">W</div>
-          <div class="card-info">
-            <h3>Wordle Pro</h3>
-            <p>Guess the 5-letter word in 6 tries.</p>
-            <span class="badge">500 Levels</span>
+      <!-- Category 1: WordBox -->
+      <section class="dashboard-category">
+        <h2 class="category-title">
+          <svg class="category-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          WordBox
+        </h2>
+        <div class="games-grid">
+          <!-- Wordle Card -->
+          <div class="game-card" data-game="wordle">
+            <div class="card-icon wordle-color">W</div>
+            <div class="card-info">
+              <h3>Wordle Pro</h3>
+              <p>Guess the 5-letter word in 6 tries.</p>
+              <span class="badge">500 Levels</span>
+            </div>
+            <button class="play-btn">Play</button>
           </div>
-          <button class="play-btn">Play</button>
-        </div>
-        
-        <!-- Octordle Card -->
-        <div class="game-card" data-game="octordle">
-          <div class="card-icon octordle-color">8</div>
-          <div class="card-info">
-            <h3>Octordle Pro</h3>
-            <p>Solve 8 Wordles simultaneously in 13 tries.</p>
-            <span class="badge">500 Levels</span>
+          
+          <!-- Octordle Card -->
+          <div class="game-card" data-game="octordle">
+            <div class="card-icon octordle-color">8</div>
+            <div class="card-info">
+              <h3>Octordle Pro</h3>
+              <p>Solve 8 Wordles simultaneously in 13 tries.</p>
+              <span class="badge">500 Levels</span>
+            </div>
+            <button class="play-btn">Play</button>
           </div>
-          <button class="play-btn">Play</button>
-        </div>
-        
-        <!-- Crossword Card -->
-        <div class="game-card" data-game="crossword">
-          <div class="card-icon crossword-color">C</div>
-          <div class="card-info">
-            <h3>Mini Crossword</h3>
-            <p>10x10, 15x15, &amp; 25x25 grids with clues.</p>
-            <span class="badge">500 Levels</span>
+          
+          <!-- Crossword Card -->
+          <div class="game-card" data-game="crossword">
+            <div class="card-icon crossword-color">C</div>
+            <div class="card-info">
+              <h3>Mini Crossword</h3>
+              <p>10x10, 15x15, &amp; 25x25 grids with clues.</p>
+              <span class="badge">500 Levels</span>
+            </div>
+            <button class="play-btn">Play</button>
           </div>
-          <button class="play-btn">Play</button>
         </div>
-        
-        <!-- Sudoku Card -->
-        <div class="game-card" data-game="sudoku">
-          <div class="card-icon sudoku-color">S</div>
-          <div class="card-info">
-            <h3>Sudoku Master</h3>
-            <p>Classical logic grid. 3 strikes and you're out.</p>
-            <span class="badge">500 Levels</span>
+      </section>
+
+      <!-- Category 2: NumberBox -->
+      <section class="dashboard-category">
+        <h2 class="category-title">
+          <svg class="category-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+          NumberBox
+        </h2>
+        <div class="games-grid">
+          <!-- Sudoku Card -->
+          <div class="game-card" data-game="sudoku">
+            <div class="card-icon sudoku-color">S</div>
+            <div class="card-info">
+              <h3>Sudoku Master</h3>
+              <p>Classical logic grid. 3 strikes and you're out.</p>
+              <span class="badge">500 Levels</span>
+            </div>
+            <button class="play-btn">Play</button>
           </div>
-          <button class="play-btn">Play</button>
         </div>
-      </div>
+      </section>
+
+      <!-- Category 3: BoardBox -->
+      <section class="dashboard-category">
+        <h2 class="category-title">
+          <svg class="category-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          BoardBox
+        </h2>
+        <div class="games-grid">
+          <!-- Coming Soon Card -->
+          <div class="game-card coming-soon">
+            <div class="card-icon boardbox-color">B</div>
+            <div class="card-info">
+              <h3>Board Classics</h3>
+              <p>Chess, Checkers, and other board games coming soon!</p>
+              <span class="badge">Coming Soon</span>
+            </div>
+            <button class="play-btn" disabled>Locked</button>
+          </div>
+        </div>
+      </section>
     </main>
     
     <!-- ==========================================================================
