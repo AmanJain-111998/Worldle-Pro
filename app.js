@@ -1,5 +1,5 @@
 // Auto-updater: clears caches and unregisters service workers if the app version has updated
-const APP_VERSION = '5.9';
+const APP_VERSION = '6.0';
 if (localStorage.getItem('gamebox_version') !== APP_VERSION) {
   localStorage.setItem('gamebox_version', APP_VERSION);
   if ('serviceWorker' in navigator) {
@@ -21,7 +21,7 @@ let deferredPrompt = null;
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js?v=5.9')
+    navigator.serviceWorker.register('./service-worker.js?v=6.0')
       .then((reg) => {
         console.log('[Service Worker] Registered:', reg.scope);
         
@@ -3518,14 +3518,12 @@ const LudoEngine = {
         { id: 2, pos: -1, isHopping: false },
         { id: 3, pos: -1, isHopping: false }
       ];
-      // Reset personal 3D dice to 1
-      this.updateDiceSlotFace(color, 1);
-      
-      const diceSlot = document.getElementById(`ludo-dice-${color}`);
-      if (diceSlot) {
-        diceSlot.classList.remove('active-roll');
-        diceSlot.onclick = null;
-      }
+    }
+    this.updateDiceSlotFace(1);
+    const diceSlot = document.getElementById('ludo-dice-central');
+    if (diceSlot) {
+      diceSlot.classList.remove('active-roll');
+      diceSlot.onclick = null;
     }
 
     document.getElementById('ludo-setup').classList.add('hidden');
@@ -3542,7 +3540,6 @@ const LudoEngine = {
     // Highlight active card
     for (const col of ['red', 'green', 'yellow', 'blue']) {
       const card = document.getElementById(`ludo-card-${col}`);
-      const diceSlot = document.getElementById(`ludo-dice-${col}`);
       if (card) {
         card.classList.remove('active');
         if (this.playerCount === 2 && (col === 'yellow' || col === 'blue')) {
@@ -3551,17 +3548,21 @@ const LudoEngine = {
           card.classList.remove('inactive');
         }
       }
-      if (diceSlot) {
-        diceSlot.classList.remove('active-roll');
-        diceSlot.onclick = null;
-      }
+    }
+
+    const diceSlot = document.getElementById('ludo-dice-central');
+    if (diceSlot) {
+      diceSlot.classList.remove('active-roll');
+      diceSlot.onclick = null;
     }
 
     document.getElementById(`ludo-card-${this.activeColor}`).classList.add('active');
 
+    // Make the central dice display the current color styling and update face to last rolled or default
+    this.updateDiceSlotFace(this.diceValue);
+
     if (this.activeColor === 'red') {
       this.updateStatusText("Your turn! Tap the glowing dice or Roll button.");
-      const diceSlot = document.getElementById('ludo-dice-red');
       if (diceSlot) {
         diceSlot.classList.add('active-roll');
         diceSlot.onclick = () => this.rollDice();
@@ -3637,7 +3638,7 @@ const LudoEngine = {
     this.stopTurnTimer();
 
     document.getElementById('btn-ludo-roll').disabled = true;
-    const diceSlot = document.getElementById(`ludo-dice-${this.activeColor}`);
+    const diceSlot = document.getElementById('ludo-dice-central');
     if (diceSlot) {
       diceSlot.classList.remove('active-roll');
       diceSlot.classList.add('active-roll');
@@ -3647,7 +3648,7 @@ const LudoEngine = {
 
     // Spin faces during rolling (Ludo King look)
     let spinInterval = setInterval(() => {
-      this.updateDiceSlotFace(this.activeColor, Math.floor(Math.random() * 6) + 1);
+      this.updateDiceSlotFace(Math.floor(Math.random() * 6) + 1);
     }, 60);
 
     setTimeout(() => {
@@ -3657,7 +3658,7 @@ const LudoEngine = {
       }
 
       this.diceValue = Math.floor(Math.random() * 6) + 1;
-      this.updateDiceSlotFace(this.activeColor, this.diceValue);
+      this.updateDiceSlotFace(this.diceValue);
 
       // Check consecutive 6s
       if (this.diceValue === 6) {
@@ -3942,9 +3943,13 @@ const LudoEngine = {
     return baseEl;
   },
 
-  updateDiceSlotFace(color, value) {
-    const diceSlot = document.getElementById(`ludo-dice-${color}`);
+  updateDiceSlotFace(value) {
+    const diceSlot = document.getElementById('ludo-dice-central');
     if (diceSlot) {
+      diceSlot.className = 'ludo-dice-slot';
+      if (this.activeColor) {
+        diceSlot.classList.add(`${this.activeColor}-glow`);
+      }
       diceSlot.innerHTML = `
         <div class="dice-dots-grid val-${value}">
           <div class="dot dot-1"></div><div class="dot dot-2"></div><div class="dot dot-3"></div>

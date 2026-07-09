@@ -2674,17 +2674,23 @@ body.light-theme .chess-control-btn {
 }
 
 /* Personal Dice Slots */
+.ludo-central-dice-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
 .ludo-dice-slot {
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 8px;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2), inset 0 -2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25), inset 0 -3px 5px rgba(0, 0, 0, 0.15);
   transition: transform 0.15s;
   overflow: hidden;
 }
@@ -2692,15 +2698,17 @@ body.light-theme .chess-control-btn {
 /* Dice Shaking Animation */
 .ludo-dice-slot.active-roll {
   animation: dice-shake 0.8s infinite;
-  border-color: #f59e0b;
-  box-shadow: 0 0 10px #f59e0b;
 }
+.ludo-dice-slot.active-roll.red-glow { border-color: #ef4444; box-shadow: 0 0 16px #ef4444; }
+.ludo-dice-slot.active-roll.green-glow { border-color: #22c55e; box-shadow: 0 0 16px #22c55e; }
+.ludo-dice-slot.active-roll.yellow-glow { border-color: #eab308; box-shadow: 0 0 16px #eab308; }
+.ludo-dice-slot.active-roll.blue-glow { border-color: #3b82f6; box-shadow: 0 0 16px #3b82f6; }
 @keyframes dice-shake {
   0%, 100% { transform: rotate(0) scale(1); }
-  20% { transform: rotate(-10deg) scale(1.05); }
-  40% { transform: rotate(10deg) scale(1.05); }
-  60% { transform: rotate(-6deg) scale(1.05); }
-  80% { transform: rotate(6deg) scale(1.05); }
+  20% { transform: rotate(-12deg) scale(1.08); }
+  40% { transform: rotate(12deg) scale(1.08); }
+  60% { transform: rotate(-8deg) scale(1.08); }
+  80% { transform: rotate(8deg) scale(1.08); }
 }
 
 /* Card Glow Statuses */
@@ -2875,21 +2883,21 @@ body.light-theme .chess-control-btn {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  width: 18px;
-  height: 18px;
-  gap: 1.5px;
+  width: 32px;
+  height: 32px;
+  gap: 2px;
   margin: auto;
 }
 .dot {
-  width: 4.2px;
-  height: 4.2px;
+  width: 7px;
+  height: 7px;
   background-color: #0f172a;
   border-radius: 50%;
   opacity: 0;
   margin: auto;
 }
 /* Dots mapping for standard dice sides */
-.val-1 .dot-5 { opacity: 1; background-color: #ef4444 !important; width: 5.5px; height: 5.5px; } /* red 1 center dot */
+.val-1 .dot-5 { opacity: 1; background-color: #ef4444 !important; width: 10px; height: 10px; } /* red 1 center dot */
 .val-2 .dot-1, .val-2 .dot-9 { opacity: 1; }
 .val-3 .dot-1, .val-3 .dot-5, .val-3 .dot-9 { opacity: 1; }
 .val-4 .dot-1, .val-4 .dot-3, .val-4 .dot-7, .val-4 .dot-9 { opacity: 1; }

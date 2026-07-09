@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
   
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="./style.css?v=5.9">
+  <link rel="stylesheet" href="./style.css?v=6.0">
 </head>
 <body class="dark-theme">
   <!-- Main App Shell -->
@@ -386,7 +386,6 @@
                   <span class="ludo-name">Red (You)</span>
                   <div class="ludo-timer-track"><div class="ludo-timer-fill" id="ludo-timer-red"></div></div>
                 </div>
-                <div class="ludo-dice-slot" id="ludo-dice-red">⚀</div>
               </div>
 
               <!-- Green Player (Top Right) -->
@@ -396,7 +395,6 @@
                   <span class="ludo-name">Green (CPU)</span>
                   <div class="ludo-timer-track"><div class="ludo-timer-fill" id="ludo-timer-green"></div></div>
                 </div>
-                <div class="ludo-dice-slot" id="ludo-dice-green">⚀</div>
               </div>
             </div>
 
@@ -416,7 +414,6 @@
                   <span class="ludo-name">Blue (CPU)</span>
                   <div class="ludo-timer-track"><div class="ludo-timer-fill" id="ludo-timer-blue"></div></div>
                 </div>
-                <div class="ludo-dice-slot" id="ludo-dice-blue">⚀</div>
               </div>
 
               <!-- Yellow Player (Bottom Right) -->
@@ -426,7 +423,6 @@
                   <span class="ludo-name">Yellow (CPU)</span>
                   <div class="ludo-timer-track"><div class="ludo-timer-fill" id="ludo-timer-yellow"></div></div>
                 </div>
-                <div class="ludo-dice-slot" id="ludo-dice-yellow">⚀</div>
               </div>
             </div>
 
@@ -434,6 +430,10 @@
             <div class="ludo-actions-bar">
               <div class="ludo-turn-info">
                 <span id="ludo-turn-indicator">Your Turn! Roll the dice.</span>
+              </div>
+              <!-- Central Dice Wrapper -->
+              <div class="ludo-central-dice-wrapper">
+                <div id="ludo-dice-central" class="ludo-dice-slot"></div>
               </div>
               <div class="ludo-action-buttons">
                 <button id="btn-ludo-roll" class="ludo-roll-btn">Roll Dice</button>
@@ -772,9 +772,9 @@
 
   <!-- Javascript Modules -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
-  <script src="./words.js?v=5.9"></script>
-  <script src="./crosswords.js?v=5.9"></script>
-  <script src="./sudokus.js?v=5.9"></script>
-  <script src="./app.js?v=5.9"></script>
+  <script src="./words.js?v=6.0"></script>
+  <script src="./crosswords.js?v=6.0"></script>
+  <script src="./sudokus.js?v=6.0"></script>
+  <script src="./app.js?v=6.0"></script>
 </body>
 </html>
