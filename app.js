@@ -177,19 +177,19 @@ const GameHubState = {
 // Initial Multi-Game Stats Blueprint
 const defaultStatsSchema = {
   wordle: {
-    practice: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0], levelIndex: 0 }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0], levelIndex: 0 }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0], levelIndex: 0 } },
+    practice: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0], levelIndex: 0, completedLevels: [] }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0], levelIndex: 0, completedLevels: [] }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0], levelIndex: 0, completedLevels: [] } },
     daily: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0], lastPlayedDay: -1, lastResult: null, savedGuesses: [] }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0], lastPlayedDay: -1, lastResult: null, savedGuesses: [] }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0], lastPlayedDay: -1, lastResult: null, savedGuesses: [] } }
   },
   octordle: {
-    practice: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: Array(13).fill(0), levelIndex: 0 }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: Array(13).fill(0), levelIndex: 0 }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: Array(13).fill(0), levelIndex: 0 } },
+    practice: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: Array(13).fill(0), levelIndex: 0, completedLevels: [] }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: Array(13).fill(0), levelIndex: 0, completedLevels: [] }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: Array(13).fill(0), levelIndex: 0, completedLevels: [] } },
     daily: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: Array(13).fill(0), lastPlayedDay: -1, lastResult: null, savedGuesses: [] }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: Array(13).fill(0), lastPlayedDay: -1, lastResult: null, savedGuesses: [] }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, guessDistribution: Array(13).fill(0), lastPlayedDay: -1, lastResult: null, savedGuesses: [] } }
   },
   crossword: {
-    practice: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0 }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0 }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0 } },
+    practice: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0, completedLevels: [] }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0, completedLevels: [] }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0, completedLevels: [] } },
     daily: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, lastPlayedDay: -1, lastResult: null }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, lastPlayedDay: -1, lastResult: null }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, lastPlayedDay: -1, lastResult: null } }
   },
   sudoku: {
-    practice: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0 }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0 }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0 } },
+    practice: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0, completedLevels: [] }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0, completedLevels: [] }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, levelIndex: 0, completedLevels: [] } },
     daily: { easy: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, lastPlayedDay: -1, lastResult: null }, medium: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, lastPlayedDay: -1, lastResult: null }, hard: { played: 0, won: 0, currentStreak: 0, maxStreak: 0, lastPlayedDay: -1, lastResult: null } }
   }
 };
@@ -299,6 +299,9 @@ function loadStats() {
             if (lvl === undefined || isNaN(lvl)) {
               GameHubState.stats[game].practice[diff].levelIndex = 0;
             }
+            if (!GameHubState.stats[game].practice[diff].completedLevels) {
+              GameHubState.stats[game].practice[diff].completedLevels = [];
+            }
           }
         }
       }
@@ -310,6 +313,23 @@ function loadStats() {
 
 function saveStats() {
   localStorage.setItem('gamebox_pro_stats', JSON.stringify(GameHubState.stats));
+}
+
+function updateLevelIndicator() {
+  const view = GameHubState.activeGame;
+  if (!view || GameHubState.gameMode !== 'practice') {
+    document.getElementById('level-indicator').classList.add('hidden');
+    return;
+  }
+  
+  const diff = GameHubState.difficulty;
+  const statsObj = GameHubState.stats[view].practice[diff];
+  const rawLvlIdx = statsObj ? (statsObj.levelIndex || 0) : 0;
+  const lvlIdx = (rawLvlIdx % 500) + 1;
+  const isCompleted = statsObj && statsObj.completedLevels && statsObj.completedLevels.includes(rawLvlIdx);
+  
+  document.getElementById('level-indicator-label').innerText = `Level ${lvlIdx}/500${isCompleted ? ' ✅' : ''}`;
+  document.getElementById('level-indicator').classList.remove('hidden');
 }
 
 function resetAllStats() {
@@ -390,15 +410,7 @@ function showView(view) {
       crosswordClueBar.classList.add('hidden');
     }
     
-    if (GameHubState.gameMode === 'practice') {
-      const diff = GameHubState.difficulty;
-      const statsObj = GameHubState.stats[view].practice[diff];
-      const lvlIdx = ((statsObj ? statsObj.levelIndex : 0) % 500) + 1;
-      document.getElementById('level-indicator-label').innerText = `Level ${lvlIdx}/500`;
-      levelInd.classList.remove('hidden');
-    } else {
-      levelInd.classList.add('hidden');
-    }
+    updateLevelIndicator();
     
     document.getElementById('sudoku-mistakes-counter').classList.add('hidden');
     
@@ -410,18 +422,7 @@ function startActiveGame() {
   GameHubState.dailyIndex = getDailyIndex();
   
   const view = GameHubState.activeGame;
-  if (view) {
-    const levelInd = document.getElementById('level-indicator');
-    if (GameHubState.gameMode === 'practice') {
-      const diff = GameHubState.difficulty;
-      const statsObj = GameHubState.stats[view].practice[diff];
-      const lvlIdx = ((statsObj ? statsObj.levelIndex : 0) % 500) + 1;
-      document.getElementById('level-indicator-label').innerText = `Level ${lvlIdx}/500`;
-      levelInd.classList.remove('hidden');
-    } else {
-      levelInd.classList.add('hidden');
-    }
-  }
+  updateLevelIndicator();
   
   if (GameHubState.activeGame === 'wordle') {
     WordleEngine.start();
@@ -969,6 +970,10 @@ const WordleEngine = {
       if (statsObj.currentStreak > statsObj.maxStreak) statsObj.maxStreak = statsObj.currentStreak;
       statsObj.guessDistribution[this.guesses.length - 1]++;
       if (mode === 'practice') {
+        if (!statsObj.completedLevels) statsObj.completedLevels = [];
+        if (!statsObj.completedLevels.includes(statsObj.levelIndex)) {
+          statsObj.completedLevels.push(statsObj.levelIndex);
+        }
         statsObj.levelIndex++;
       }
     } else {
@@ -1314,6 +1319,10 @@ const OctordleEngine = {
       if (statsObj.currentStreak > statsObj.maxStreak) statsObj.maxStreak = statsObj.currentStreak;
       statsObj.guessDistribution[this.guesses.length - 1]++;
       if (mode === 'practice') {
+        if (!statsObj.completedLevels) statsObj.completedLevels = [];
+        if (!statsObj.completedLevels.includes(statsObj.levelIndex)) {
+          statsObj.completedLevels.push(statsObj.levelIndex);
+        }
         statsObj.levelIndex++;
       }
     } else {
@@ -1365,9 +1374,7 @@ const CrosswordEngine = {
     this.selectedCell = { r: -1, c: -1 };
     
     // Sync indicator badge
-    const badge = document.getElementById('level-indicator');
-    badge.classList.remove('hidden');
-    document.getElementById('level-indicator-label').innerText = `Level ${this.puzzleIndex + 1}/500`;
+    updateLevelIndicator();
     
     // Build grids
     this.solution = Array(this.size).fill(null).map(() => Array(this.size).fill('.'));
@@ -1739,6 +1746,10 @@ const CrosswordEngine = {
     if (statObj.currentStreak > statObj.maxStreak) statObj.maxStreak = statObj.currentStreak;
     
     if (mode === 'practice') {
+      if (!statObj.completedLevels) statObj.completedLevels = [];
+      if (!statObj.completedLevels.includes(statObj.levelIndex)) {
+        statObj.completedLevels.push(statObj.levelIndex);
+      }
       statObj.levelIndex++; // unlock next level
     }
     saveStats();
@@ -1785,9 +1796,7 @@ const SudokuEngine = {
     this.history = [];
     
     // Sync indicator badge & Mistakes Counter
-    const indicator = document.getElementById('level-indicator');
-    indicator.classList.remove('hidden');
-    document.getElementById('level-indicator-label').innerText = `Level ${this.puzzleIndex + 1}/500`;
+    updateLevelIndicator();
     
     const mistakesEl = document.getElementById('sudoku-mistakes-counter');
     mistakesEl.classList.remove('hidden');
