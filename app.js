@@ -1882,7 +1882,8 @@ const SudokuEngine = {
           }
         }
         
-        cell.addEventListener('click', () => {
+        cell.addEventListener('click', (e) => {
+          e.stopPropagation(); // Prevent document click listener from immediately unselecting
           AudioPlayer.playClick();
           this.selectedCell = { r: row, c: col };
           this.renderBoard();
