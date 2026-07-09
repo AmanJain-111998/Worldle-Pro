@@ -1608,11 +1608,11 @@ body.light-theme .sudoku-cell.row-divider {
 
 /* Cell states colors */
 .sudoku-cell.given {
-  background-color: transparent;
+  background-color: var(--bg-main);
 }
 
 body.light-theme .sudoku-cell.given {
-  background-color: transparent;
+  background-color: var(--bg-main);
 }
 
 /* Cell Highlights (similar to sudoku.com) */

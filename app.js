@@ -608,6 +608,26 @@ function bindOrchestratorEvents() {
     }
   });
 
+  document.getElementById('btn-force-refresh').addEventListener('click', () => {
+    AudioPlayer.playClick();
+    showToast('Clearing cache and reloading...');
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+    caches.keys().then((names) => {
+      for (let name of names) {
+        caches.delete(name);
+      }
+    });
+    setTimeout(() => {
+      window.location.reload(true);
+    }, 600);
+  });
+
   // Share Stats logic
   document.getElementById('btn-share-stats').addEventListener('click', () => {
     const text = getShareContent();
