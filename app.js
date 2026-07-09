@@ -1,8 +1,22 @@
-// app.js - Gamebox Pro Orchestrator & Games Engines
+// Auto-updater: clears caches and unregisters service workers if the app version has updated
+const APP_VERSION = '5.3';
+if (localStorage.getItem('gamebox_version') !== APP_VERSION) {
+  localStorage.setItem('gamebox_version', APP_VERSION);
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+      caches.keys().then((names) => {
+        for (let name of names) {
+          caches.delete(name);
+        }
+        window.location.reload(true);
+      });
+    });
+  }
+}
 
-// ==========================================================================
-// PWA Service Worker Registration & Installation Prompt
-// ==========================================================================
 let deferredPrompt = null;
 
 if ('serviceWorker' in navigator) {
