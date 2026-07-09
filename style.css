@@ -1798,7 +1798,7 @@ body.light-theme .secondary-button:hover {
 /* ==========================================================================
    Breakpoints & Responsiveness Adjustments
    ========================================================================== */
-@media (max-height: 650px) {
+@media (max-height: 800px) {
   .app-header {
     height: 46px;
   }
@@ -1832,7 +1832,7 @@ body.light-theme .secondary-button:hover {
   }
 }
 
-@media (max-height: 570px) {
+@media (max-height: 680px) {
   .app-header {
     height: 38px;
   }

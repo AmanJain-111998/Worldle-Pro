@@ -852,6 +852,27 @@ const WordleEngine = {
       const statsObj = GameHubState.stats.wordle.practice[GameHubState.difficulty];
       const lvlIdx = (statsObj.levelIndex || 0) % list.length;
       this.target = list[lvlIdx];
+      
+      const isCompleted = statsObj.completedLevels && statsObj.completedLevels.includes(statsObj.levelIndex);
+      if (isCompleted) {
+        this.guesses = [this.target];
+        this.status = 'WON';
+        
+        // Render instantly
+        setTimeout(() => {
+          this.guesses.forEach((guess, rowIdx) => {
+            const evals = gradeGuess(guess, this.target);
+            evals.forEach((state, colIdx) => {
+              const tile = document.getElementById(`wordle-tile-${rowIdx}-${colIdx}`);
+              if (tile) {
+                tile.innerText = guess[colIdx].toUpperCase();
+                tile.classList.add(`${state}-state`);
+                updateKeyStyle(guess[colIdx], state);
+              }
+            });
+          });
+        }, 50);
+      }
     }
     console.log('[Wordle Target]:', this.target.toUpperCase());
   },
@@ -1082,6 +1103,13 @@ const OctordleEngine = {
       const startIdx = ((statsObj.levelIndex || 0) * 8) % list.length;
       for (let i = 0; i < 8; i++) {
         this.targets.push(list[(startIdx + i) % list.length]);
+      }
+      
+      const isCompleted = statsObj.completedLevels && statsObj.completedLevels.includes(statsObj.levelIndex);
+      if (isCompleted) {
+        this.guesses = [...this.targets];
+        this.status = 'WON';
+        this.solved = Array(8).fill(true);
       }
     }
     
@@ -1381,6 +1409,10 @@ const CrosswordEngine = {
     this.gridnums = Array(this.size).fill(null).map(() => Array(this.size).fill(0));
     this.playerGrid = Array(this.size).fill(null).map(() => Array(this.size).fill(''));
     
+    const isCompleted = mode === 'practice' && 
+                        GameHubState.stats.crossword.practice[diff].completedLevels && 
+                        GameHubState.stats.crossword.practice[diff].completedLevels.includes(this.puzzleIndex);
+
     // Fill solution grid
     puzzle.forEach((entry) => {
       const len = entry.w.length;
@@ -1388,7 +1420,7 @@ const CrosswordEngine = {
         const curr_r = entry.d === 'D' ? entry.r + i : entry.r;
         const curr_c = entry.d === 'D' ? entry.c : entry.c + i;
         this.solution[curr_r][curr_c] = entry.w[i];
-        this.playerGrid[curr_r][curr_c] = ' '; // empty space stands for white playable cell
+        this.playerGrid[curr_r][curr_c] = isCompleted ? entry.w[i] : ' '; // Fill with solution if completed
       }
     });
     
@@ -1609,7 +1641,20 @@ const CrosswordEngine = {
     });
   },
 
+  isSolved() {
+    for (let r = 0; r < this.size; r++) {
+      for (let c = 0; c < this.size; c++) {
+        if (this.solution[r][c] === '.') continue;
+        if (!this.playerGrid[r] || !this.playerGrid[r][c] || this.playerGrid[r][c].trim().toUpperCase() !== this.solution[r][c].toUpperCase()) {
+          return false;
+        }
+      }
+    }
+    return true;
+  },
+
   handleInput(char) {
+    if (this.isSolved()) return;
     if (this.selectedCell.r === -1) return;
     AudioPlayer.playKey();
     
@@ -1624,6 +1669,7 @@ const CrosswordEngine = {
   },
 
   handleBackspace() {
+    if (this.isSolved()) return;
     if (this.selectedCell.r === -1) return;
     AudioPlayer.playClick();
     
@@ -1802,6 +1848,10 @@ const SudokuEngine = {
     mistakesEl.classList.remove('hidden');
     mistakesEl.innerText = `Mistakes: 0/3`;
     
+    const isCompleted = mode === 'practice' && 
+                        GameHubState.stats.sudoku.practice[diff].completedLevels && 
+                        GameHubState.stats.sudoku.practice[diff].completedLevels.includes(this.puzzleIndex);
+
     // Parse puzzle layout strings
     this.initialBoard = Array(9).fill(null).map(() => Array(9).fill(0));
     this.playerBoard = Array(9).fill(null).map(() => Array(9).fill(0));
@@ -1818,7 +1868,7 @@ const SudokuEngine = {
         const solutionVal = parseInt(solutionPart[idx]);
         
         this.initialBoard[r][c] = initialVal;
-        this.playerBoard[r][c] = initialVal;
+        this.playerBoard[r][c] = isCompleted ? solutionVal : initialVal; // Fill with solution if completed
         this.solutionBoard[r][c] = solutionVal;
       }
     }
@@ -1913,6 +1963,7 @@ const SudokuEngine = {
   },
 
   handleUndo() {
+    if (this.checkSudokuWin()) return;
     if (this.history.length === 0) return;
     AudioPlayer.playClick();
     const prev = this.history.pop();
@@ -1927,6 +1978,7 @@ const SudokuEngine = {
   },
 
   toggleNotesMode() {
+    if (this.checkSudokuWin()) return;
     AudioPlayer.playClick();
     this.notesMode = !this.notesMode;
     const btn = document.getElementById('key-sudoku-notes');
@@ -1935,6 +1987,7 @@ const SudokuEngine = {
   },
 
   handleInput(num) {
+    if (this.checkSudokuWin()) return;
     if (this.selectedCell.r === -1) return;
     const r = this.selectedCell.r;
     const c = this.selectedCell.c;
@@ -1990,6 +2043,7 @@ const SudokuEngine = {
   },
 
   eraseCell() {
+    if (this.checkSudokuWin()) return;
     if (this.selectedCell.r === -1) return;
     const r = this.selectedCell.r;
     const c = this.selectedCell.c;
