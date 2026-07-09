@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gamebox-pro-v4.7';
+const CACHE_NAME = 'gamebox-pro-v4.8';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -47,16 +47,20 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith(
     fetch(event.request).then((networkResponse) => {
-      // If response is valid, update the cache
-      if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
+      // If response is valid (including CORS/opaque for external fonts), update cache
+      if (networkResponse && (networkResponse.status === 200 || networkResponse.status === 0)) {
+        const url = new URL(event.request.url);
+        // Only cache HTTP/HTTPS assets to avoid extension or internal scheme issues
+        if (url.protocol.startsWith('http')) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
       }
       return networkResponse;
     }).catch(() => {
-      // If network fails (offline), load from cache
+      // If network fails (offline or airplane mode), load from cache
       return caches.match(event.request);
     })
   );

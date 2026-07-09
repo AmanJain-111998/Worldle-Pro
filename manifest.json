@@ -1,7 +1,7 @@
 {
-  "name": "Wordle Pro Offline",
-  "short_name": "Wordle Pro",
-  "description": "Wordle game with 3 difficulty levels: Easy, Medium, and Hard. Features practice mode, daily challenge, statistics, dark mode, and colorblind mode. Playable 100% offline.",
+  "name": "Gamebox Pro",
+  "short_name": "Gamebox Pro",
+  "description": "Play Wordle, Octordle, Mini Crossword, and Sudoku 100% offline. Features practice mode with 500 levels, daily challenges, dark mode, stats tracking, and custom localized clues.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
