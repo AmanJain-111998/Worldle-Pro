@@ -1,5 +1,5 @@
 // Auto-updater: clears caches and unregisters service workers if the app version has updated
-const APP_VERSION = '5.3';
+const APP_VERSION = '5.4';
 if (localStorage.getItem('gamebox_version') !== APP_VERSION) {
   localStorage.setItem('gamebox_version', APP_VERSION);
   if ('serviceWorker' in navigator) {
@@ -21,7 +21,7 @@ let deferredPrompt = null;
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js?v=5.3')
+    navigator.serviceWorker.register('./service-worker.js?v=5.4')
       .then((reg) => {
         console.log('[Service Worker] Registered:', reg.scope);
         
@@ -347,7 +347,7 @@ function saveStats() {
 
 function updateLevelIndicator() {
   const view = GameHubState.activeGame;
-  if (!view || GameHubState.gameMode !== 'practice') {
+  if (!view || GameHubState.gameMode !== 'practice' || view === 'game2048') {
     document.getElementById('level-indicator').classList.add('hidden');
     return;
   }
@@ -438,11 +438,18 @@ function showView(view) {
     // Manage level badge and crossword clue bar
     const levelInd = document.getElementById('level-indicator');
     const crosswordClueBar = document.getElementById('crossword-clue-bar');
+    const diffTabs = document.querySelector('.difficulty-tabs');
     
     if (view === 'crossword') {
       crosswordClueBar.classList.remove('hidden');
     } else {
       crosswordClueBar.classList.add('hidden');
+    }
+    
+    if (view === 'game2048') {
+      if (diffTabs) diffTabs.classList.add('hidden');
+    } else {
+      if (diffTabs) diffTabs.classList.remove('hidden');
     }
     
     updateLevelIndicator();
@@ -2386,10 +2393,10 @@ function updateStatsModal() {
                      (game === 'octordle' ? OctordleEngine.status !== 'IN_PROGRESS' :
                      (game === 'crossword' ? (CrosswordEngine.isChecked && !document.getElementById('modal-stats').classList.contains('hidden')) :
                      (game === 'sudoku' ? SudokuEngine.checkSudokuWin() :
-                     (game === 'game2048' ? (Game2048Engine.isGameOver || Game2048Engine.isGameWon) : false)))));
+                     (game === 'game2048' ? Game2048Engine.isGameOver : false)))));
                      
   if (isGameOver) {
-    if (game === 'sudoku' || game === 'crossword' || game === 'game2048') {
+    if (game === 'sudoku' || game === 'crossword') {
       if (mode === 'practice') {
         nextLevelBtn.classList.remove('hidden');
         nextLevelBtn.onclick = () => {
@@ -2448,33 +2455,12 @@ const Game2048Engine = {
   grid: [],      // 4x4 grid array of numbers (0 for empty)
   score: 0,
   bestScore: 0,
-  targetTile: 2048, // Win threshold based on difficulty (256, 1024, 2048)
   isGameOver: false,
-  isGameWon: false,
+  reached2048: false,
   swipeStartX: 0,
   swipeStartY: 0,
 
   start() {
-    const mode = GameHubState.gameMode;
-    const diff = GameHubState.difficulty;
-    
-    // Set level index
-    let levelIndex = 0;
-    if (mode === 'daily') {
-      levelIndex = GameHubState.dailyIndex % 500;
-    } else {
-      levelIndex = GameHubState.stats.game2048.practice[diff].levelIndex % 500;
-    }
-    
-    // Set target tile based on difficulty
-    if (diff === 'easy') {
-      this.targetTile = 256;
-    } else if (diff === 'medium') {
-      this.targetTile = 1024;
-    } else {
-      this.targetTile = 2048;
-    }
-
     // Load best score from local storage
     this.bestScore = parseInt(localStorage.getItem('gamebox_2048_best') || '0', 10);
     document.getElementById('game2048-best').textContent = this.bestScore;
@@ -2482,14 +2468,14 @@ const Game2048Engine = {
     this.initGame();
     
     // Show toast for level target
-    showToast(`Target: Reach the ${this.targetTile} tile! 🎯`);
+    showToast("Welcome to 2048 Classic! 🎯");
   },
 
   initGame() {
     this.grid = Array(4).fill(null).map(() => Array(4).fill(0));
     this.score = 0;
     this.isGameOver = false;
-    this.isGameWon = false;
+    this.reached2048 = false;
     
     document.getElementById('game2048-score').textContent = '0';
     
@@ -2547,7 +2533,7 @@ const Game2048Engine = {
 
     // Keyboard Arrow Keys / WASD
     window.addEventListener('keydown', (e) => {
-      if (GameHubState.activeGame !== 'game2048' || this.isGameOver || this.isGameWon) return;
+      if (GameHubState.activeGame !== 'game2048' || this.isGameOver) return;
       
       let moved = false;
       switch (e.key) {
@@ -2584,13 +2570,13 @@ const Game2048Engine = {
     // Touch Swipe gestures
     const board = document.getElementById('board-2048');
     board.addEventListener('touchstart', (e) => {
-      if (GameHubState.activeGame !== 'game2048' || this.isGameOver || this.isGameWon) return;
+      if (GameHubState.activeGame !== 'game2048' || this.isGameOver) return;
       this.swipeStartX = e.touches[0].clientX;
       this.swipeStartY = e.touches[0].clientY;
     }, { passive: true });
 
     board.addEventListener('touchend', (e) => {
-      if (GameHubState.activeGame !== 'game2048' || this.isGameOver || this.isGameWon) return;
+      if (GameHubState.activeGame !== 'game2048' || this.isGameOver) return;
       
       const diffX = e.changedTouches[0].clientX - this.swipeStartX;
       const diffY = e.changedTouches[0].clientY - this.swipeStartY;
@@ -2636,7 +2622,7 @@ const Game2048Engine = {
   },
 
   handleDpadMove(dir) {
-    if (GameHubState.activeGame !== 'game2048' || this.isGameOver || this.isGameWon) return;
+    if (GameHubState.activeGame !== 'game2048' || this.isGameOver) return;
     
     let moved = false;
     if (dir === 'up') moved = this.moveUp();
@@ -2746,13 +2732,14 @@ const Game2048Engine = {
   },
 
   checkGameStatus() {
-    // 1. Check Win Target
-    for (let r = 0; r < 4; r++) {
-      for (let c = 0; c < 4; c++) {
-        if (this.grid[r][c] >= this.targetTile) {
-          this.isGameWon = true;
-          this.handleWin();
-          return;
+    // 1. Check if reached 2048 for the first time in this game
+    if (!this.reached2048) {
+      for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 4; c++) {
+          if (this.grid[r][c] === 2048) {
+            this.reached2048 = true;
+            showToast("You reached the 2048 tile! 🏆 Keep playing to beat your high score! 🎉");
+          }
         }
       }
     }
@@ -2777,30 +2764,6 @@ const Game2048Engine = {
     this.isGameOver = true;
     setTimeout(() => {
       showToast("No moves left! Game Over. 😢");
-    }, 400);
-  },
-
-  handleWin() {
-    const mode = GameHubState.gameMode;
-    const diff = GameHubState.difficulty;
-    
-    setTimeout(() => {
-      showToast(`Congratulations! You reached the ${this.targetTile} tile! 🏆🎉`);
-      
-      if (mode === 'practice') {
-        const statsObj = GameHubState.stats.game2048.practice[diff];
-        if (!statsObj.completedLevels) statsObj.completedLevels = [];
-        if (!statsObj.completedLevels.includes(statsObj.levelIndex)) {
-          statsObj.completedLevels.push(statsObj.levelIndex);
-        }
-        statsObj.levelIndex++;
-      }
-      saveStats();
-      
-      setTimeout(() => {
-        updateStatsModal();
-        openModal(document.getElementById('modal-stats'));
-      }, 1200);
     }, 400);
   }
 };
