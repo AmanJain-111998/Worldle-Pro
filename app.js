@@ -1,5 +1,5 @@
 // Auto-updater: clears caches and unregisters service workers if the app version has updated
-const APP_VERSION = '6.6';
+const APP_VERSION = '6.7';
 if (localStorage.getItem('gamebox_version') !== APP_VERSION) {
   localStorage.setItem('gamebox_version', APP_VERSION);
   if ('serviceWorker' in navigator) {
@@ -21,7 +21,7 @@ let deferredPrompt = null;
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js?v=6.6')
+    navigator.serviceWorker.register('./service-worker.js?v=6.7')
       .then((reg) => {
         console.log('[Service Worker] Registered:', reg.scope);
         
@@ -307,18 +307,27 @@ function loadUserSettings() {
   AudioPlayer.enabled = settings.sound;
   GameHubState.gameMode = settings.gameMode;
   
-  document.getElementById('toggle-dark-mode').checked = settings.darkMode;
-  document.getElementById('toggle-colorblind').checked = settings.colorblind;
-  document.getElementById('toggle-sound').checked = settings.sound;
-  document.getElementById('select-game-mode').value = settings.gameMode;
+  const elDarkMode = document.getElementById('toggle-dark-mode');
+  if (elDarkMode) elDarkMode.checked = settings.darkMode;
+  const elColorblind = document.getElementById('toggle-colorblind');
+  if (elColorblind) elColorblind.checked = settings.colorblind;
+  const elSound = document.getElementById('toggle-sound');
+  if (elSound) elSound.checked = settings.sound;
+  const elGameMode = document.getElementById('select-game-mode');
+  if (elGameMode) elGameMode.value = settings.gameMode;
 }
 
 function saveUserSettings() {
+  const elDarkMode = document.getElementById('toggle-dark-mode');
+  const elColorblind = document.getElementById('toggle-colorblind');
+  const elSound = document.getElementById('toggle-sound');
+  const elGameMode = document.getElementById('select-game-mode');
+
   const settings = {
-    darkMode: document.getElementById('toggle-dark-mode').checked,
-    colorblind: document.getElementById('toggle-colorblind').checked,
-    sound: document.getElementById('toggle-sound').checked,
-    gameMode: document.getElementById('select-game-mode').value
+    darkMode: elDarkMode ? elDarkMode.checked : true,
+    colorblind: elColorblind ? elColorblind.checked : false,
+    sound: elSound ? elSound.checked : true,
+    gameMode: elGameMode ? elGameMode.value : 'practice'
   };
   localStorage.setItem('wordle_settings', JSON.stringify(settings));
 }
@@ -658,7 +667,7 @@ function bindOrchestratorEvents() {
   });
   
   // Navigation Home
-  document.getElementById('btn-home').addEventListener('click', () => {
+  safeBindEvent('btn-home', 'click', () => {
     AudioPlayer.playClick();
     showView('dashboard');
   });
@@ -679,52 +688,53 @@ function bindOrchestratorEvents() {
   });
 
   // Menu Modals events
-  document.getElementById('btn-help').addEventListener('click', () => openHelpModal());
-  document.getElementById('btn-close-help').addEventListener('click', () => closeModal(document.getElementById('modal-help')));
-  document.getElementById('btn-stats').addEventListener('click', () => {
+  safeBindEvent('btn-help', 'click', () => openHelpModal());
+  safeBindEvent('btn-close-help', 'click', () => closeModal(document.getElementById('modal-help')));
+  safeBindEvent('btn-stats', 'click', () => {
     updateStatsModal();
     openModal(document.getElementById('modal-stats'));
   });
-  document.getElementById('btn-close-stats').addEventListener('click', () => closeModal(document.getElementById('modal-stats')));
+  safeBindEvent('btn-close-stats', 'click', () => closeModal(document.getElementById('modal-stats')));
   
-  document.getElementById('btn-settings').addEventListener('click', () => openModal(document.getElementById('modal-settings')));
-  document.getElementById('btn-close-settings').addEventListener('click', () => closeModal(document.getElementById('modal-settings')));
+  safeBindEvent('btn-settings', 'click', () => openModal(document.getElementById('modal-settings')));
+  safeBindEvent('btn-close-settings', 'click', () => closeModal(document.getElementById('modal-settings')));
 
   // Inside-settings links
-  document.getElementById('btn-settings-help').addEventListener('click', () => {
+  safeBindEvent('btn-settings-help', 'click', () => {
     closeModal(document.getElementById('modal-settings'));
     openHelpModal();
   });
-  document.getElementById('btn-settings-stats').addEventListener('click', () => {
+  safeBindEvent('btn-settings-stats', 'click', () => {
     closeModal(document.getElementById('modal-settings'));
     updateStatsModal();
     openModal(document.getElementById('modal-stats'));
   });
   
   // Exit buttons
-  document.getElementById('btn-prompt-exit').addEventListener('click', () => {
+  safeBindEvent('btn-prompt-exit', 'click', () => {
     closeModal(document.getElementById('modal-gameover-prompt'));
     showView('dashboard');
   });
 
   // Settings selections
-  document.getElementById('select-game-mode').addEventListener('change', (e) => {
+  safeBindEvent('select-game-mode', 'change', (e) => {
     GameHubState.gameMode = e.target.value;
     saveUserSettings();
     closeModal(document.getElementById('modal-settings'));
     startActiveGame();
   });
   
-  document.getElementById('toggle-dark-mode').addEventListener('change', (e) => {
+  safeBindEvent('toggle-dark-mode', 'change', (e) => {
     const isDark = e.target.checked;
     document.body.className = '';
     document.body.classList.add(isDark ? 'dark-theme' : 'light-theme');
-    if (document.getElementById('toggle-colorblind').checked) document.body.classList.add('colorblind');
+    const cb = document.getElementById('toggle-colorblind');
+    if (cb && cb.checked) document.body.classList.add('colorblind');
     saveUserSettings();
     AudioPlayer.playClick();
   });
 
-  document.getElementById('toggle-colorblind').addEventListener('change', (e) => {
+  safeBindEvent('toggle-colorblind', 'change', (e) => {
     const isColor = e.target.checked;
     if (isColor) document.body.classList.add('colorblind');
     else document.body.classList.remove('colorblind');
@@ -732,19 +742,19 @@ function bindOrchestratorEvents() {
     AudioPlayer.playClick();
   });
 
-  document.getElementById('toggle-sound').addEventListener('change', (e) => {
+  safeBindEvent('toggle-sound', 'change', (e) => {
     AudioPlayer.enabled = e.target.checked;
     saveUserSettings();
     AudioPlayer.playClick();
   });
 
-  document.getElementById('btn-reset-stats').addEventListener('click', () => {
+  safeBindEvent('btn-reset-stats', 'click', () => {
     if (confirm('Permanently clear statistics of all games?')) {
       resetAllStats();
     }
   });
 
-  document.getElementById('btn-force-refresh').addEventListener('click', () => {
+  safeBindEvent('btn-force-refresh', 'click', () => {
     AudioPlayer.playClick();
     showToast('Clearing cache and reloading...');
     if ('serviceWorker' in navigator) {
@@ -765,7 +775,7 @@ function bindOrchestratorEvents() {
   });
 
   // Share Stats logic
-  document.getElementById('btn-share-stats').addEventListener('click', () => {
+  safeBindEvent('btn-share-stats', 'click', () => {
     const text = getShareContent();
     if (navigator.share) {
       navigator.share({ title: 'Gamebox Score', text }).catch(err => console.log(err));
@@ -777,7 +787,7 @@ function bindOrchestratorEvents() {
   });
 
   // Practice Again
-  document.getElementById('btn-practice-again').addEventListener('click', () => {
+  safeBindEvent('btn-practice-again', 'click', () => {
     closeModal(document.getElementById('modal-stats'));
     startActiveGame();
   });
